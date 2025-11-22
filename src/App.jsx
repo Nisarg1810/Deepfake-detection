@@ -1,54 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Hero from './components/Hero';
-import Features from './components/Features';
-import HowItWorks from './components/HowItWorks';
-import TechStack from './components/TechStack';
-import CTA from './components/CTA';
-import Footer from './components/Footer';
-import Background from './components/Background';
-import CustomCursor from './components/CustomCursor';
-import Loader from './components/Loader';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
+import UploadPage from './pages/UploadPage';
+import ProcessingPage from './pages/ProcessingPage';
+import ResultsPage from './pages/ResultsPage';
 
 function App() {
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        // Simulate loading time
-        const timer = setTimeout(() => {
-            setLoading(false);
-        }, 2500);
-        return () => clearTimeout(timer);
-    }, []);
-
     return (
-        <>
-            <CustomCursor />
-            <AnimatePresence mode="wait">
-                {loading ? (
-                    <Loader key="loader" />
-                ) : (
-                    <motion.div
-                        key="content"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="relative w-full min-h-screen overflow-hidden"
-                    >
-                        <Background />
-                        <main className="relative z-10">
-                            <Hero />
-                            <Features />
-                            <HowItWorks />
-                            <TechStack />
-                            <CTA />
-                        </main>
-                        <Footer />
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </>
+        <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/upload" element={<UploadPage />} />
+            <Route path="/processing" element={<ProcessingPage />} />
+            <Route path="/results" element={<ResultsPage />} />
+        </Routes>
     );
 }
 
