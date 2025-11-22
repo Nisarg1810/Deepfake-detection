@@ -1,0 +1,186 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { CheckCircle, AlertTriangle, Download, RefreshCw, Play } from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Progress } from '../components/ui/progress';
+import Navbar from '../components/Navbar';
+import Background from '../components/Background';
+import Footer from '../components/Footer';
+import CustomCursor from '../components/CustomCursor';
+
+const ResultsPage = () => {
+    // Mock result data
+    const isFake = true; // Toggle this to see different states
+    const confidenceScore = 89.4;
+
+    return (
+        <>
+            <CustomCursor />
+            <div className="relative min-h-screen w-full overflow-hidden text-white">
+                <Background />
+                <Navbar />
+
+                <main className="relative z-10 container mx-auto px-4 pt-32 pb-20">
+                    <div className="max-w-5xl mx-auto">
+
+                        {/* Header */}
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="text-center mb-12"
+                        >
+                            <h1 className="text-3xl md:text-5xl font-bold mb-4">Analysis Complete</h1>
+                            <p className="text-gray-400">Report generated successfully</p>
+                        </motion.div>
+
+                        <div className="grid lg:grid-cols-3 gap-8">
+
+                            {/* Main Result Card */}
+                            <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.2 }}
+                                className="lg:col-span-2 space-y-6"
+                            >
+                                <Card className={`border-2 ${isFake ? 'border-red-500/50 bg-red-950/10' : 'border-green-500/50 bg-green-950/10'} backdrop-blur-xl`}>
+                                    <CardContent className="p-8 flex flex-col md:flex-row items-center gap-8">
+                                        <div className="relative">
+                                            <div className={`w-32 h-32 rounded-full flex items-center justify-center border-4 ${isFake ? 'border-red-500' : 'border-green-500'} shadow-[0_0_30px_rgba(0,0,0,0.5)]`}>
+                                                <span className={`text-3xl font-bold ${isFake ? 'text-red-500' : 'text-green-500'}`}>
+                                                    {confidenceScore}%
+                                                </span>
+                                            </div>
+                                            {isFake && (
+                                                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                                    FAKE
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="text-center md:text-left flex-1">
+                                            <h2 className="text-2xl font-bold mb-2 flex items-center justify-center md:justify-start gap-2">
+                                                {isFake ? (
+                                                    <>
+                                                        <AlertTriangle className="text-red-500" />
+                                                        <span className="text-red-500">High Probability of Deepfake</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <CheckCircle className="text-green-500" />
+                                                        <span className="text-green-500">Authentic Content</span>
+                                                    </>
+                                                )}
+                                            </h2>
+                                            <p className="text-gray-300 mb-4">
+                                                {isFake
+                                                    ? "Our system detected significant anomalies consistent with AI generation techniques."
+                                                    : "No significant anomalies detected. The video appears to be authentic."}
+                                            </p>
+                                            <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                                                <span className="px-3 py-1 rounded-full bg-white/5 text-xs border border-white/10">GAN Fingerprints</span>
+                                                <span className="px-3 py-1 rounded-full bg-white/5 text-xs border border-white/10">Temporal Inconsistencies</span>
+                                                <span className="px-3 py-1 rounded-full bg-white/5 text-xs border border-white/10">Facial Landmarks</span>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+
+                                {/* Video Preview & Timeline (Mock) */}
+                                <Card className="bg-black/40 border-white/10 backdrop-blur-xl">
+                                    <CardHeader>
+                                        <CardTitle className="text-lg">Frame Analysis</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="aspect-video bg-black rounded-lg mb-4 relative overflow-hidden group">
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                <Play className="w-12 h-12 text-white/50 group-hover:text-white transition-colors" />
+                                            </div>
+                                            {/* Mock Frame Overlay */}
+                                            {isFake && (
+                                                <div className="absolute top-1/4 left-1/3 w-24 h-24 border-2 border-red-500 rounded-sm opacity-70" />
+                                            )}
+                                            <p className="absolute bottom-2 right-2 text-xs text-gray-400">Preview Mode</p>
+                                        </div>
+
+                                        {/* Mock Timeline */}
+                                        <div className="space-y-2">
+                                            <div className="flex justify-between text-xs text-gray-400">
+                                                <span>00:00</span>
+                                                <span>00:15</span>
+                                                <span>00:30</span>
+                                            </div>
+                                            <div className="h-8 bg-white/5 rounded flex overflow-hidden">
+                                                <div className="w-[20%] bg-green-500/20 h-full" />
+                                                <div className="w-[15%] bg-red-500/50 h-full" />
+                                                <div className="w-[30%] bg-green-500/20 h-full" />
+                                                <div className="w-[10%] bg-red-500/50 h-full" />
+                                                <div className="w-[25%] bg-green-500/20 h-full" />
+                                            </div>
+                                            <p className="text-xs text-center text-red-400 mt-1">Red segments indicate detected anomalies</p>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
+
+                            {/* Sidebar */}
+                            <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.4 }}
+                                className="space-y-6"
+                            >
+                                <Card className="bg-black/40 border-white/10 backdrop-blur-xl">
+                                    <CardHeader>
+                                        <CardTitle className="text-lg">Detailed Metrics</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-4">
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between text-sm">
+                                                <span className="text-gray-400">Facial Consistency</span>
+                                                <span className="text-red-400">Low (42%)</span>
+                                            </div>
+                                            <Progress value={42} className="h-1.5 bg-white/10" />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between text-sm">
+                                                <span className="text-gray-400">Lighting Coherence</span>
+                                                <span className="text-yellow-400">Medium (68%)</span>
+                                            </div>
+                                            <Progress value={68} className="h-1.5 bg-white/10" />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between text-sm">
+                                                <span className="text-gray-400">Audio-Visual Sync</span>
+                                                <span className="text-green-400">High (95%)</span>
+                                            </div>
+                                            <Progress value={95} className="h-1.5 bg-white/10" />
+                                        </div>
+                                    </CardContent>
+                                </Card>
+
+                                <div className="space-y-3">
+                                    <Button className="w-full bg-white text-black hover:bg-gray-200" variant="premium">
+                                        <Download className="w-4 h-4 mr-2" />
+                                        Download Full Report
+                                    </Button>
+                                    <Link to="/upload" className="block">
+                                        <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
+                                            <RefreshCw className="w-4 h-4 mr-2" />
+                                            Analyze Another Video
+                                        </Button>
+                                    </Link>
+                                </div>
+                            </motion.div>
+
+                        </div>
+                    </div>
+                </main>
+                <Footer />
+            </div>
+        </>
+    );
+};
+
+export default ResultsPage;
