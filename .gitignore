@@ -10,6 +10,14 @@ venv/
 env/
 ENV/
 
+# Node modules and frontend build
+node_modules/
+Frontend/node_modules/
+Frontend/dist/
+Frontend/.vite/
+package-lock.json
+Frontend/package-lock.json
+
 # IDE
 .vscode/
 .idea/

@@ -1,30 +1,34 @@
 @echo off
 echo ============================================================
-echo DEEPFAKE DETECTION WEB INTERFACE
+echo DEEPFAKE DETECTION - REACT + FLASK INTEGRATION
 echo ============================================================
 echo.
-echo Starting Flask server...
+echo Starting Backend Server (Flask)...
 echo.
 
 cd web
-start python server.py
+start cmd /k "python server.py"
 
 timeout /t 3 /nobreak >nul
 
-echo Server started!
 echo.
-echo Opening web interface in your browser...
+echo Starting Frontend Server (React + Vite)...
 echo.
 
-start index.html
+cd ../Frontend
+start cmd /k "npm run dev"
 
+echo.
 echo ============================================================
-echo READY TO USE!
+echo SERVERS STARTED!
 echo ============================================================
 echo.
-echo The web interface should open in your browser automatically.
-echo If not, open this file manually: web/index.html
+echo Backend:  http://localhost:5000
+echo Frontend: http://localhost:5173
 echo.
-echo To stop the server, close the Python window.
+echo Open http://localhost:5173 in your browser
+echo.
+echo Press any key to exit this window...
+echo (The servers will continue running in separate windows)
 echo ============================================================
-pause
+pause >nul
