@@ -1,0 +1,10 @@
+matplotlib
+numpy
+pillow
+opencv-python
+scikit-learn
+flask
+flask-cors
+xgboost
+seaborn
+pandas

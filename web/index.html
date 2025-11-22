@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepfake Detection System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </svg>
+                <h1>Deepfake Detection</h1>
+            </div>
+            <p class="tagline">AI-Powered Video Authenticity Analysis</p>
+        </header>
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <div class="upload-box" id="uploadBox">
+                <input type="file" id="videoInput" accept="video/*" hidden>
+                <div class="upload-content">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                    </svg>
+                    <h2>Upload Video</h2>
+                    <p>Drag and drop or click to select</p>
+                    <span class="file-types">MP4, AVI, MOV supported</span>
+                </div>
+            </div>
+
+            <div class="video-preview" id="videoPreview" style="display: none;">
+                <video id="previewVideo" controls></video>
+                <div class="video-info">
+                    <p id="fileName"></p>
+                    <p id="fileSize"></p>
+                </div>
+                <button class="btn btn-primary" id="analyzeBtn">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                    </svg>
+                    Analyze Video
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading Section -->
+        <div class="loading-section" id="loadingSection" style="display: none;">
+            <div class="spinner"></div>
+            <h3>Analyzing Video...</h3>
+            <p id="loadingStatus">Initializing detection models...</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <div class="verdict-card" id="verdictCard">
+                <div class="verdict-icon" id="verdictIcon"></div>
+                <h2 class="verdict-label" id="verdictLabel"></h2>
+                <div class="verdict-score">
+                    <span class="score-value" id="scoreValue"></span>
+                    <span class="score-label">Confidence Score</span>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h3>CNN Detection</h3>
+                    <div class="metric-value" id="cnnScore">--</div>
+                    <div class="metric-bar">
+                        <div class="metric-fill" id="cnnBar"></div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <h3>Frequency Analysis</h3>
+                    <div class="metric-value" id="freqScore">--</div>
+                    <div class="metric-bar">
+                        <div class="metric-fill" id="freqBar"></div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <h3>Temporal Analysis</h3>
+                    <div class="metric-value" id="tempScore">--</div>
+                    <div class="metric-bar">
+                        <div class="metric-fill" id="tempBar"></div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <h3>Lip-Sync Analysis</h3>
+                    <div class="metric-value" id="lipScore">--</div>
+                    <div class="metric-bar">
+                        <div class="metric-fill" id="lipBar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h3>Analysis Details</h3>
+                <div class="detail-item">
+                    <span class="detail-label">Frames Analyzed:</span>
+                    <span class="detail-value" id="framesCount">--</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Faces Detected:</span>
+                    <span class="detail-value" id="facesCount">--</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Processing Time:</span>
+                    <span class="detail-value" id="processingTime">--</span>
+                </div>
+            </div>
+
+            <button class="btn btn-secondary" id="resetBtn">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                Test Another Video
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
