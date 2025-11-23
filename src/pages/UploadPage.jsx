@@ -54,7 +54,7 @@ const UploadPage = () => {
 
     const handleAnalyze = () => {
         if (file) {
-            navigate('/processing');
+            navigate('/processing', { state: { videoFile: file } });
         }
     };
 

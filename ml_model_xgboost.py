@@ -355,18 +355,218 @@ class DeepfakeDetectionModel:
     
     def plot_confusion_matrix(self, cm):
         """
-        Plot confusion matrix heatmap.
+        Plot confusion matrix heatmap with percentages.
         """
-        plt.figure(figsize=(8, 6))
+        plt.figure(figsize=(10, 8))
         
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
+        # Calculate percentages
+        cm_percent = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis] * 100
+        
+        # Create annotations with both count and percentage
+        annot = np.empty_like(cm).astype(str)
+        for i in range(cm.shape[0]):
+            for j in range(cm.shape[1]):
+                annot[i, j] = f'{cm[i, j]}\n({cm_percent[i, j]:.1f}%)'
+        
+        sns.heatmap(cm, annot=annot, fmt='', cmap='Blues', 
                     xticklabels=['Real', 'Fake'],
-                    yticklabels=['Real', 'Fake'])
-        plt.ylabel('True Label')
-        plt.xlabel('Predicted Label')
-        plt.title('Confusion Matrix', fontsize=14, fontweight='bold')
+                    yticklabels=['Real', 'Fake'],
+                    cbar_kws={'label': 'Count'})
+        plt.ylabel('True Label', fontsize=12, fontweight='bold')
+        plt.xlabel('Predicted Label', fontsize=12, fontweight='bold')
+        plt.title('Confusion Matrix Heatmap', fontsize=14, fontweight='bold')
         plt.tight_layout()
+        plt.savefig('models/confusion_matrix.png', dpi=300, bbox_inches='tight')
         plt.show()
+        print("✓ Confusion matrix saved to: models/confusion_matrix.png")
+    
+    def plot_roc_curve(self, y_test, y_proba):
+        """
+        Plot ROC curve with AUC score.
+        """
+        fpr, tpr, thresholds = roc_curve(y_test, y_proba)
+        auc = roc_auc_score(y_test, y_proba)
+        
+        plt.figure(figsize=(10, 8))
+        
+        # Plot ROC curve
+        plt.plot(fpr, tpr, color='darkorange', lw=2, 
+                label=f'ROC curve (AUC = {auc:.4f})')
+        
+        # Plot diagonal (random classifier)
+        plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--',
+                label='Random Classifier (AUC = 0.5000)')
+        
+        plt.xlim([0.0, 1.0])
+        plt.ylim([0.0, 1.05])
+        plt.xlabel('False Positive Rate', fontsize=12, fontweight='bold')
+        plt.ylabel('True Positive Rate', fontsize=12, fontweight='bold')
+        plt.title('ROC Curve - Receiver Operating Characteristic', 
+                 fontsize=14, fontweight='bold')
+        plt.legend(loc="lower right", fontsize=11)
+        plt.grid(alpha=0.3)
+        plt.tight_layout()
+        plt.savefig('models/roc_curve.png', dpi=300, bbox_inches='tight')
+        plt.show()
+        print("✓ ROC curve saved to: models/roc_curve.png")
+    
+    def plot_performance_comparison(self, metrics):
+        """
+        Compare model performance with ideal performance.
+        """
+        fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+        
+        # Metrics comparison
+        metric_names = ['Accuracy', 'Precision', 'Recall', 'F1-Score', 'AUC-ROC']
+        model_scores = [
+            metrics['accuracy'],
+            metrics['precision'],
+            metrics['recall'],
+            metrics['f1_score'],
+            metrics['auc_roc']
+        ]
+        ideal_scores = [1.0, 1.0, 1.0, 1.0, 1.0]  # Perfect scores
+        
+        x = np.arange(len(metric_names))
+        width = 0.35
+        
+        axes[0].bar(x - width/2, model_scores, width, label='Your Model', 
+                   color='steelblue', alpha=0.8)
+        axes[0].bar(x + width/2, ideal_scores, width, label='Ideal Model', 
+                   color='lightcoral', alpha=0.8)
+        
+        axes[0].set_ylabel('Score', fontsize=12, fontweight='bold')
+        axes[0].set_title('Model Performance vs Ideal', fontsize=14, fontweight='bold')
+        axes[0].set_xticks(x)
+        axes[0].set_xticklabels(metric_names, rotation=45, ha='right')
+        axes[0].legend()
+        axes[0].grid(axis='y', alpha=0.3)
+        axes[0].set_ylim([0, 1.1])
+        
+        # Add value labels on bars
+        for i, (model, ideal) in enumerate(zip(model_scores, ideal_scores)):
+            axes[0].text(i - width/2, model + 0.02, f'{model:.3f}', 
+                        ha='center', va='bottom', fontsize=9)
+        
+        # Performance gap analysis
+        gaps = [ideal - model for ideal, model in zip(ideal_scores, model_scores)]
+        colors = ['green' if gap < 0.1 else 'orange' if gap < 0.3 else 'red' 
+                 for gap in gaps]
+        
+        axes[1].barh(metric_names, gaps, color=colors, alpha=0.7)
+        axes[1].set_xlabel('Gap from Ideal', fontsize=12, fontweight='bold')
+        axes[1].set_title('Performance Gap Analysis', fontsize=14, fontweight='bold')
+        axes[1].grid(axis='x', alpha=0.3)
+        
+        # Add value labels
+        for i, gap in enumerate(gaps):
+            axes[1].text(gap + 0.01, i, f'{gap:.3f}', 
+                        va='center', fontsize=9)
+        
+        plt.tight_layout()
+        plt.savefig('models/performance_comparison.png', dpi=300, bbox_inches='tight')
+        plt.show()
+        print("✓ Performance comparison saved to: models/performance_comparison.png")
+    
+    def plot_metrics_heatmap(self, metrics):
+        """
+        Create a comprehensive metrics heatmap.
+        """
+        # Create metrics matrix
+        metrics_data = {
+            'Accuracy': [metrics['accuracy'], 1.0],
+            'Precision': [metrics['precision'], 1.0],
+            'Recall': [metrics['recall'], 1.0],
+            'F1-Score': [metrics['f1_score'], 1.0],
+            'AUC-ROC': [metrics['auc_roc'], 1.0]
+        }
+        
+        df = pd.DataFrame(metrics_data, index=['Your Model', 'Ideal Model'])
+        
+        plt.figure(figsize=(12, 4))
+        sns.heatmap(df, annot=True, fmt='.4f', cmap='RdYlGn', 
+                   vmin=0, vmax=1, cbar_kws={'label': 'Score'},
+                   linewidths=2, linecolor='white')
+        plt.title('Comprehensive Metrics Heatmap', fontsize=14, fontweight='bold')
+        plt.ylabel('Model Type', fontsize=12, fontweight='bold')
+        plt.xlabel('Metrics', fontsize=12, fontweight='bold')
+        plt.tight_layout()
+        plt.savefig('models/metrics_heatmap.png', dpi=300, bbox_inches='tight')
+        plt.show()
+        print("✓ Metrics heatmap saved to: models/metrics_heatmap.png")
+    
+    def generate_comprehensive_report(self, metrics, y_test, y_pred, y_proba):
+        """
+        Generate comprehensive performance report.
+        """
+        print("\n" + "="*80)
+        print("COMPREHENSIVE PERFORMANCE REPORT")
+        print("="*80)
+        
+        # Basic metrics
+        print("\n📊 CLASSIFICATION METRICS:")
+        print("-" * 80)
+        print(f"{'Metric':<20} {'Your Model':<15} {'Ideal Model':<15} {'Gap':<15}")
+        print("-" * 80)
+        
+        metrics_list = [
+            ('Accuracy', metrics['accuracy']),
+            ('Precision', metrics['precision']),
+            ('Recall', metrics['recall']),
+            ('F1-Score', metrics['f1_score']),
+            ('AUC-ROC', metrics['auc_roc'])
+        ]
+        
+        for name, score in metrics_list:
+            gap = 1.0 - score
+            status = "✓" if gap < 0.1 else "⚠" if gap < 0.3 else "✗"
+            print(f"{status} {name:<18} {score:<15.4f} {1.0:<15.4f} {gap:<15.4f}")
+        
+        # Confusion matrix details
+        cm = metrics['confusion_matrix']
+        tn, fp, fn, tp = cm.ravel()
+        
+        print("\n🎯 CONFUSION MATRIX BREAKDOWN:")
+        print("-" * 80)
+        print(f"True Negatives (Real → Real):    {tn:>5} ({tn/(tn+fp)*100:>5.1f}%)")
+        print(f"False Positives (Real → Fake):   {fp:>5} ({fp/(tn+fp)*100:>5.1f}%)")
+        print(f"False Negatives (Fake → Real):   {fn:>5} ({fn/(fn+tp)*100:>5.1f}%)")
+        print(f"True Positives (Fake → Fake):    {tp:>5} ({tp/(fn+tp)*100:>5.1f}%)")
+        
+        # Additional metrics
+        specificity = tn / (tn + fp) if (tn + fp) > 0 else 0
+        sensitivity = tp / (tp + fn) if (tp + fn) > 0 else 0
+        
+        print("\n📈 ADDITIONAL METRICS:")
+        print("-" * 80)
+        print(f"Specificity (True Negative Rate): {specificity:.4f}")
+        print(f"Sensitivity (True Positive Rate): {sensitivity:.4f}")
+        print(f"False Positive Rate:              {fp/(fp+tn):.4f}")
+        print(f"False Negative Rate:              {fn/(fn+tp):.4f}")
+        
+        print("\n💡 PERFORMANCE INSIGHTS:")
+        print("-" * 80)
+        
+        if metrics['accuracy'] >= 0.9:
+            print("✓ Excellent accuracy! Model performs very well.")
+        elif metrics['accuracy'] >= 0.7:
+            print("⚠ Good accuracy, but there's room for improvement.")
+        else:
+            print("✗ Accuracy needs improvement. Consider more training data.")
+        
+        if metrics['auc_roc'] >= 0.9:
+            print("✓ Excellent AUC-ROC! Strong discriminative ability.")
+        elif metrics['auc_roc'] >= 0.7:
+            print("⚠ Good AUC-ROC, model can distinguish classes reasonably well.")
+        else:
+            print("✗ Low AUC-ROC. Model struggles to distinguish real from fake.")
+        
+        if abs(metrics['precision'] - metrics['recall']) < 0.1:
+            print("✓ Balanced precision and recall.")
+        else:
+            print("⚠ Imbalanced precision and recall. Consider adjusting threshold.")
+        
+        print("="*80 + "\n")
     
     def save_model(self, path='models/deepfake_xgboost.json'):
         """
@@ -405,11 +605,30 @@ def main():
     # Evaluate
     metrics = model.evaluate(X_test, y_test)
     
-    # Feature Importance
+    # Get predictions for visualizations
+    y_pred = model.predict(X_test)
+    y_proba = model.predict_proba(X_test)[:, 1]
+    
+    # Generate comprehensive report
+    model.generate_comprehensive_report(metrics, y_test, y_pred, y_proba)
+    
+    # Visualizations
+    print("\n📊 Generating visualizations...")
+    
+    # 1. Feature Importance
     model.plot_feature_importance(top_n=15)
     
-    # Confusion Matrix
+    # 2. Confusion Matrix Heatmap
     model.plot_confusion_matrix(metrics['confusion_matrix'])
+    
+    # 3. ROC Curve
+    model.plot_roc_curve(y_test, y_proba)
+    
+    # 4. Performance Comparison
+    model.plot_performance_comparison(metrics)
+    
+    # 5. Metrics Heatmap
+    model.plot_metrics_heatmap(metrics)
     
     # Test single prediction
     print("\n🎯 SINGLE PREDICTION TEST")

@@ -19,7 +19,7 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend
 
 # Configuration
-UPLOAD_FOLDER = 'storage/uploads'
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'storage', 'uploads')
 ALLOWED_EXTENSIONS = {'mp4', 'avi', 'mov', 'mkv'}
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
