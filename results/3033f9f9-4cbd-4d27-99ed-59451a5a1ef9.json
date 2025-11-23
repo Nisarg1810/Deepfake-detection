@@ -1,0 +1,75 @@
+{
+  "job_id": "3033f9f9-4cbd-4d27-99ed-59451a5a1ef9",
+  "video_path": "storage/uploads\\3033f9f9-4cbd-4d27-99ed-59451a5a1ef9_WIN_20251121_21_39_07_Pro.mp4",
+  "frames": 10,
+  "faces": 10,
+  "aggregation": {
+    "total_faces": 10,
+    "max_score": 0.8637,
+    "mean_score": 0.6487099999999999,
+    "frequency_score": 0.5528199999999999,
+    "lip_sync_score": 0.8337102235696128,
+    "temporal_mean": 0.5311768263415483,
+    "temporal_max": 0.7100086338941886
+  },
+  "verdict": {
+    "label": "LIKELY_MANIPULATED",
+    "confidence": 0.7274,
+    "reason": [
+      "High CNN detection score"
+    ],
+    "final_score": 0.6313036820649152,
+    "final_label": "POSSIBLY_MANIPULATED"
+  },
+  "abnormality_report": {
+    "spatial_artifacts": [
+      {
+        "face_file": "face_0009.jpg",
+        "artifact_type": "blending_boundary",
+        "confidence": 0.8637
+      },
+      {
+        "face_file": "face_0006.jpg",
+        "artifact_type": "blending_boundary",
+        "confidence": 0.8581
+      },
+      {
+        "face_file": "face_0004.jpg",
+        "artifact_type": "blending_boundary",
+        "confidence": 0.8235
+      }
+    ],
+    "temporal_artifacts": [
+      {
+        "type": "temporal_inconsistency",
+        "score": 0.7100086338941886
+      }
+    ],
+    "lip_sync_score": 0.8337102235696128
+  },
+  "technique_report": {
+    "primary_technique": {
+      "name": "Face Swap (GAN-based)",
+      "confidence": 0.7,
+      "indicators": [
+        "Spatial blending artifacts"
+      ]
+    },
+    "all_techniques": [
+      {
+        "name": "Face Swap (GAN-based)",
+        "confidence": 0.7,
+        "indicators": [
+          "Spatial blending artifacts"
+        ]
+      },
+      {
+        "name": "Face Reenactment",
+        "confidence": 0.6,
+        "indicators": [
+          "Temporal inconsistencies"
+        ]
+      }
+    ]
+  }
+}

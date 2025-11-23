@@ -1,1 +1,59 @@
+# Ignore Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Node modules and frontend build
 node_modules/
+Frontend/node_modules/
+Frontend/dist/
+Frontend/.vite/
+package-lock.json
+Frontend/package-lock.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Storage and temporary files
+storage/uploads/*
+storage/frames/*
+storage/faces/*
+storage/mouth/*
+storage/audio/*
+results/*
+models/*
+
+# Keep directory structure
+!storage/uploads/.gitkeep
+!storage/frames/.gitkeep
+!storage/faces/.gitkeep
+!storage/mouth/.gitkeep
+!storage/audio/.gitkeep
+!results/.gitkeep
+!models/.gitkeep
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large video files
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log

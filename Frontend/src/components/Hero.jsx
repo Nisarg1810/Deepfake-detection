@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { Play, Upload } from 'lucide-react';
-import VideoUpload from './VideoUpload';
 
 const Hero = () => {
-    const [showUpload, setShowUpload] = useState(false);
-
     return (
         <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20">
             <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
@@ -42,24 +40,27 @@ const Hero = () => {
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <motion.button
-                            whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(0, 243, 255, 0.5)" }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => setShowUpload(true)}
-                            className="px-8 py-4 bg-neon-blue text-black font-bold rounded-lg flex items-center justify-center gap-2 transition-all"
-                        >
-                            <Upload size={20} />
-                            Upload Video
-                        </motion.button>
+                        <Link to="/upload">
+                            <motion.button
+                                whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(0, 243, 255, 0.5)" }}
+                                whileTap={{ scale: 0.95 }}
+                                className="px-8 py-4 bg-neon-blue text-black font-bold rounded-lg flex items-center justify-center gap-2 transition-all w-full sm:w-auto"
+                            >
+                                <Upload size={20} />
+                                Upload Video
+                            </motion.button>
+                        </Link>
 
-                        <motion.button
-                            whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.1)" }}
-                            whileTap={{ scale: 0.95 }}
-                            className="px-8 py-4 border border-white/20 text-white font-bold rounded-lg flex items-center justify-center gap-2 backdrop-blur-sm hover:border-neon-purple transition-all"
-                        >
-                            <Play size={20} />
-                            Try Demo
-                        </motion.button>
+                        <Link to="/upload">
+                            <motion.button
+                                whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.1)" }}
+                                whileTap={{ scale: 0.95 }}
+                                className="px-8 py-4 border border-white/20 text-white font-bold rounded-lg flex items-center justify-center gap-2 backdrop-blur-sm hover:border-neon-purple transition-all w-full sm:w-auto"
+                            >
+                                <Play size={20} />
+                                Try Demo
+                            </motion.button>
+                        </Link>
                     </div>
                 </motion.div>
 
@@ -107,11 +108,6 @@ const Hero = () => {
                     </div>
                 </motion.div>
             </div>
-
-            {/* Video Upload Modal */}
-            <AnimatePresence>
-                {showUpload && <VideoUpload onClose={() => setShowUpload(false)} />}
-            </AnimatePresence>
         </section>
     );
 };

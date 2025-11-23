@@ -6,7 +6,7 @@ echo.
 echo Starting Backend Server (Flask)...
 echo.
 
-cd web
+cd backend
 start cmd /k "python server.py"
 
 timeout /t 3 /nobreak >nul
