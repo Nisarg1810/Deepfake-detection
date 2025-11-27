@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Models and data
+*.pkl
+*.joblib
+backend/models/
+backend/extracted_features.csv
+backend/dataset_features.csv
+
+# Storage (uploaded files)
+backend/storage/
+storage/
+
+# Results
+backend/results/
+results/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.cursor/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (Frontend)
+node_modules/
+Frontend/node_modules/
+.npm
+*.log
+
+# Environment
+.env
+.env.local
+*.local
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+

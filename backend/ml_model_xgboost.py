@@ -146,7 +146,7 @@ class DeepfakeDetectionModel:
             le = LabelEncoder()
             y = le.fit_transform(y)
         
-        print(f"✓ Loaded {len(X)} samples with {X.shape[1]} features")
+        print(f"[OK] Loaded {len(X)} samples with {X.shape[1]} features")
         
         return X, y
     
@@ -161,7 +161,7 @@ class DeepfakeDetectionModel:
             X_train, X_test, y_train, y_test
         """
         if self.use_mock_data:
-            print("📊 Generating mock data for testing...")
+            print("[DATA] Generating mock data for testing...")
             X, y = self.generate_mock_features(n_samples=1000)
         else:
             if dataset_path is None:
@@ -183,7 +183,7 @@ class DeepfakeDetectionModel:
         X_train_scaled = pd.DataFrame(X_train_scaled, columns=self.feature_names)
         X_test_scaled = pd.DataFrame(X_test_scaled, columns=self.feature_names)
         
-        print(f"✓ Data prepared:")
+        print(f"[OK] Data prepared:")
         print(f"  Training samples: {len(X_train)} (Real: {sum(y_train==0)}, Fake: {sum(y_train==1)})")
         print(f"  Test samples: {len(X_test)} (Real: {sum(y_test==0)}, Fake: {sum(y_test==1)})")
         
@@ -193,7 +193,7 @@ class DeepfakeDetectionModel:
         """
         Train XGBoost model with optimal hyperparameters.
         """
-        print("\n🚀 Training XGBoost model...")
+        print("\n[TRAIN] Training XGBoost model...")
         
         # Best hyperparameters for binary classification
         params = {
@@ -226,7 +226,7 @@ class DeepfakeDetectionModel:
         else:
             self.model.fit(X_train, y_train)
         
-        print("✓ Model trained successfully!")
+        print("[OK] Model trained successfully!")
         
         # Extract feature importance
         self.feature_importance = pd.DataFrame({
@@ -291,7 +291,7 @@ class DeepfakeDetectionModel:
         """
         Comprehensive evaluation with all metrics.
         """
-        print("\n📊 EVALUATION RESULTS")
+        print("\n[EVAL] EVALUATION RESULTS")
         print("="*60)
         
         # Predictions
@@ -347,7 +347,7 @@ class DeepfakeDetectionModel:
         plt.tight_layout()
         plt.show()
         
-        print("\n📈 FEATURE IMPORTANCE (FI = X)")
+        print("\n[FI] FEATURE IMPORTANCE (FI = X)")
         print("="*60)
         for idx, row in top_features.iterrows():
             print(f"{row['feature']:30s} → {row['importance']:.4f}")
@@ -378,7 +378,7 @@ class DeepfakeDetectionModel:
         plt.tight_layout()
         plt.savefig('models/confusion_matrix.png', dpi=300, bbox_inches='tight')
         plt.show()
-        print("✓ Confusion matrix saved to: models/confusion_matrix.png")
+        print("[OK] Confusion matrix saved to: models/confusion_matrix.png")
     
     def plot_roc_curve(self, y_test, y_proba):
         """
@@ -408,7 +408,7 @@ class DeepfakeDetectionModel:
         plt.tight_layout()
         plt.savefig('models/roc_curve.png', dpi=300, bbox_inches='tight')
         plt.show()
-        print("✓ ROC curve saved to: models/roc_curve.png")
+        print("[OK] ROC curve saved to: models/roc_curve.png")
     
     def plot_performance_comparison(self, metrics):
         """
@@ -466,7 +466,7 @@ class DeepfakeDetectionModel:
         plt.tight_layout()
         plt.savefig('models/performance_comparison.png', dpi=300, bbox_inches='tight')
         plt.show()
-        print("✓ Performance comparison saved to: models/performance_comparison.png")
+        print("[OK] Performance comparison saved to: models/performance_comparison.png")
     
     def plot_metrics_heatmap(self, metrics):
         """
@@ -493,7 +493,7 @@ class DeepfakeDetectionModel:
         plt.tight_layout()
         plt.savefig('models/metrics_heatmap.png', dpi=300, bbox_inches='tight')
         plt.show()
-        print("✓ Metrics heatmap saved to: models/metrics_heatmap.png")
+        print("[OK] Metrics heatmap saved to: models/metrics_heatmap.png")
     
     def generate_comprehensive_report(self, metrics, y_test, y_pred, y_proba):
         """
@@ -504,7 +504,7 @@ class DeepfakeDetectionModel:
         print("="*80)
         
         # Basic metrics
-        print("\n📊 CLASSIFICATION METRICS:")
+        print("\n[METRICS] CLASSIFICATION METRICS:")
         print("-" * 80)
         print(f"{'Metric':<20} {'Your Model':<15} {'Ideal Model':<15} {'Gap':<15}")
         print("-" * 80)
@@ -526,7 +526,7 @@ class DeepfakeDetectionModel:
         cm = metrics['confusion_matrix']
         tn, fp, fn, tp = cm.ravel()
         
-        print("\n🎯 CONFUSION MATRIX BREAKDOWN:")
+        print("\n[CM] CONFUSION MATRIX BREAKDOWN:")
         print("-" * 80)
         print(f"True Negatives (Real → Real):    {tn:>5} ({tn/(tn+fp)*100:>5.1f}%)")
         print(f"False Positives (Real → Fake):   {fp:>5} ({fp/(tn+fp)*100:>5.1f}%)")
@@ -537,34 +537,34 @@ class DeepfakeDetectionModel:
         specificity = tn / (tn + fp) if (tn + fp) > 0 else 0
         sensitivity = tp / (tp + fn) if (tp + fn) > 0 else 0
         
-        print("\n📈 ADDITIONAL METRICS:")
+        print("\n[ADD] ADDITIONAL METRICS:")
         print("-" * 80)
         print(f"Specificity (True Negative Rate): {specificity:.4f}")
         print(f"Sensitivity (True Positive Rate): {sensitivity:.4f}")
         print(f"False Positive Rate:              {fp/(fp+tn):.4f}")
         print(f"False Negative Rate:              {fn/(fn+tp):.4f}")
         
-        print("\n💡 PERFORMANCE INSIGHTS:")
+        print("\n[INSIGHTS] PERFORMANCE INSIGHTS:")
         print("-" * 80)
         
         if metrics['accuracy'] >= 0.9:
-            print("✓ Excellent accuracy! Model performs very well.")
+            print("[OK] Excellent accuracy! Model performs very well.")
         elif metrics['accuracy'] >= 0.7:
-            print("⚠ Good accuracy, but there's room for improvement.")
+            print("[WARN] Good accuracy, but there's room for improvement.")
         else:
-            print("✗ Accuracy needs improvement. Consider more training data.")
+            print("[X] Accuracy needs improvement. Consider more training data.")
         
         if metrics['auc_roc'] >= 0.9:
-            print("✓ Excellent AUC-ROC! Strong discriminative ability.")
+            print("[OK] Excellent AUC-ROC! Strong discriminative ability.")
         elif metrics['auc_roc'] >= 0.7:
-            print("⚠ Good AUC-ROC, model can distinguish classes reasonably well.")
+            print("[WARN] Good AUC-ROC, model can distinguish classes reasonably well.")
         else:
-            print("✗ Low AUC-ROC. Model struggles to distinguish real from fake.")
+            print("[X] Low AUC-ROC. Model struggles to distinguish real from fake.")
         
         if abs(metrics['precision'] - metrics['recall']) < 0.1:
-            print("✓ Balanced precision and recall.")
+            print("[OK] Balanced precision and recall.")
         else:
-            print("⚠ Imbalanced precision and recall. Consider adjusting threshold.")
+            print("[WARN] Imbalanced precision and recall. Consider adjusting threshold.")
         
         print("="*80 + "\n")
     
@@ -574,7 +574,7 @@ class DeepfakeDetectionModel:
         """
         os.makedirs(os.path.dirname(path), exist_ok=True)
         self.model.save_model(path)
-        print(f"✓ Model saved to: {path}")
+        print(f"[OK] Model saved to: {path}")
     
     def load_model(self, path='models/deepfake_xgboost.json'):
         """
@@ -582,7 +582,7 @@ class DeepfakeDetectionModel:
         """
         self.model = xgb.XGBClassifier()
         self.model.load_model(path)
-        print(f"✓ Model loaded from: {path}")
+        print(f"[OK] Model loaded from: {path}")
 
 
 def main():
@@ -613,7 +613,7 @@ def main():
     model.generate_comprehensive_report(metrics, y_test, y_pred, y_proba)
     
     # Visualizations
-    print("\n📊 Generating visualizations...")
+    print("\n[VIZ] Generating visualizations...")
     
     # 1. Feature Importance
     model.plot_feature_importance(top_n=15)
@@ -631,7 +631,7 @@ def main():
     model.plot_metrics_heatmap(metrics)
     
     # Test single prediction
-    print("\n🎯 SINGLE PREDICTION TEST")
+    print("\n[TEST] SINGLE PREDICTION TEST")
     print("="*60)
     
     # Create a sample (suspicious features)
@@ -666,8 +666,8 @@ def main():
     # Save model
     model.save_model('models/deepfake_xgboost.json')
     
-    print("\n✅ ALL DONE!")
-    print("\n💡 TO USE WITH REAL DATASET:")
+    print("\n[DONE] ALL DONE!")
+    print("\n[TIP] TO USE WITH REAL DATASET:")
     print("   1. Set use_mock_data=False")
     print("   2. Provide dataset_path to prepare_data()")
     print("   3. Run training again")
